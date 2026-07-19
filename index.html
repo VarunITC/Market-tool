@@ -182,14 +182,14 @@ textarea{min-height:76px;resize:vertical}
     </div>
     <button type="button" class="contact-btn" id="pickContacts">&#128100; Pick from phone contacts</button>
     <div class="chips" id="waChips"></div>
-    <label class="fl">Email recipients <span class="req">*</span></label>
+    <label class="fl">Email recipients (optional)</label>
     <div class="addline">
       <input type="email" id="emailInput" placeholder="e.g. asm@company.com">
       <button type="button" id="emailAdd">Add</button>
     </div>
     <div class="chips" id="emailChips"></div>
     <p class="hint">All added emails go in the To line of one mail.</p>
-    <div class="err-msg" id="recipErr">Add at least one WhatsApp number and one email recipient.</div>
+    <div class="err-msg" id="recipErr">Add at least one WhatsApp number.</div>
   </div>
 
 </div>
@@ -471,7 +471,7 @@ function validate(){
   var mediaOk = mediaFiles.length > 0;
   $('mediaErr').style.display = mediaOk ? 'none':'block';
 
-  var recipOk = waNumbers.length > 0 && emails.length > 0;
+  var recipOk = waNumbers.length > 0;
   $('recipErr').style.display = recipOk ? 'none':'block';
 
   var allOk = ok && compOk && entryOk && mediaOk && recipOk;
@@ -583,15 +583,16 @@ function openSendFlow(){
     rows.push(makeStep('WhatsApp \u2014 media', 'This browser cannot hand files to WhatsApp; attach from gallery inside the chat.', 'Noted', function(){}));
   }
 
-  rows.push(makeStep('Email \u2014 report', 'Opens your mail app with recipients, subject and report filled in.', 'Open', function(){
-    sendEmailNow();
-  }));
-
-  if(navigator.canShare && navigator.canShare({files:files})){
-    rows.push(makeStep('Email \u2014 media (' + files.length + ' file' + (files.length>1?'s':'') + ')',
-      'Share menu opens \u2192 choose Gmail \u2192 add the same recipients. Attachments go through.', 'Share', function(){
-      shareBatch(files, 'Market Visit Observations \u2014 media attached');
+  if(emails.length){
+    rows.push(makeStep('Email \u2014 report', 'Opens your mail app with recipients, subject and report filled in.', 'Open', function(){
+      sendEmailNow();
     }));
+    if(navigator.canShare && navigator.canShare({files:files})){
+      rows.push(makeStep('Email \u2014 media (' + files.length + ' file' + (files.length>1?'s':'') + ')',
+        'Share menu opens \u2192 choose Gmail \u2192 add the same recipients. Attachments go through.', 'Share', function(){
+        shareBatch(files, 'Market Visit Observations \u2014 media attached');
+      }));
+    }
   }
 
   openSheet('Send Report \u2014 complete each step', 'Work down the list. Each button opens the app; send there and come back for the next step.', rows);
