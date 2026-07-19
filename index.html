@@ -11,7 +11,7 @@
   --marigold:#f5a623; --line:#dfe3da; --muted:#6b7568; --danger:#c0392b;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.45;padding-bottom:120px}
+body{font-family:-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.45;padding-bottom:110px}
 header{background:var(--field-green);color:#fff;padding:16px 18px 14px;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 header h1{font-size:18px;font-weight:700;letter-spacing:.3px}
 header p{font-size:12.5px;opacity:.85;margin-top:2px}
@@ -22,7 +22,7 @@ header p{font-size:12.5px;opacity:.85;margin-top:2px}
 label.fl{display:block;font-size:13px;font-weight:600;margin:12px 0 5px;color:var(--ink)}
 label.fl:first-of-type{margin-top:0}
 label .req{color:var(--danger)}
-input[type=text],input[type=date],input[type=email],textarea{width:100%;border:1.5px solid var(--line);border-radius:8px;padding:11px 12px;font-size:16px;background:#fff;color:var(--ink);font-family:inherit}
+input[type=text],input[type=date],input[type=email],input[type=tel],textarea{width:100%;border:1.5px solid var(--line);border-radius:8px;padding:11px 12px;font-size:16px;background:#fff;color:var(--ink);font-family:inherit}
 input:focus,textarea:focus{outline:none;border-color:var(--field-green)}
 textarea{min-height:84px;resize:vertical}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -30,26 +30,22 @@ textarea{min-height:84px;resize:vertical}
 .addline{display:flex;gap:8px;align-items:stretch}
 .addline input{flex:1}
 .addline button{border:none;border-radius:8px;background:var(--field-green);color:#fff;font-size:14px;font-weight:700;padding:0 16px;cursor:pointer;font-family:inherit}
+.prefix-line{display:flex;gap:8px;align-items:stretch}
+.prefix{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:8px;padding:0 12px;font-size:16px;font-weight:700;background:#eef2ec;color:var(--muted);flex:none}
+.prefix-line input{flex:1}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .chip{display:inline-flex;align-items:center;gap:6px;background:#e8f0ea;color:var(--field-green-dark);border:1px solid #cfe0d5;border-radius:20px;padding:6px 8px 6px 12px;font-size:13.5px;font-weight:600}
 .chip button{border:none;background:none;color:var(--danger);font-size:15px;cursor:pointer;line-height:1;padding:2px}
-.media-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
-.media-btns.two{grid-template-columns:1fr 1fr}
+.chips.err-ring{outline:2px solid var(--danger);outline-offset:4px;border-radius:8px}
+.media-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
 .media-btn{border:1.5px dashed var(--field-green);border-radius:10px;background:#f0f6f2;color:var(--field-green-dark);padding:14px 6px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;display:block;font-family:inherit;width:100%}
 .media-btn span{display:block;font-size:22px;margin-bottom:4px}
-.file-hidden{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .gallery-btn{width:100%;margin-top:10px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:10px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;font-family:inherit}
-.rec-panel{display:none;margin-top:10px;background:#fdf3f2;border:1px solid #f0c8c3;border-radius:8px;padding:12px;align-items:center;justify-content:space-between;gap:10px}
-.rec-panel.on{display:flex}
-.rec-status{font-size:14px;font-weight:700;color:var(--danger);display:flex;align-items:center;gap:8px}
-.rec-dot{width:10px;height:10px;border-radius:50%;background:var(--danger);animation:blink 1s infinite}
-@keyframes blink{50%{opacity:.25}}
-.rec-stop{border:none;border-radius:8px;background:var(--danger);color:#fff;font-size:13px;font-weight:700;padding:10px 14px;cursor:pointer;font-family:inherit}
 .contact-btn{margin-top:8px;border:1px solid var(--field-green);background:#f0f6f2;color:var(--field-green-dark);border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;width:100%}
+.file-hidden{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .media-list{margin-top:10px;display:flex;flex-direction:column;gap:8px}
 .media-item{display:flex;align-items:center;gap:10px;background:#f7f9f6;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px}
 .media-item img,.media-item video{width:52px;height:52px;object-fit:cover;border-radius:6px;flex:none;background:#ddd}
-.media-item .audio-ic{width:52px;height:52px;border-radius:6px;background:#e8f0ea;display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
 .media-item .meta{flex:1;min-width:0}
 .media-item .meta .nm{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .media-item .meta .sz{color:var(--muted);font-size:12px}
@@ -59,29 +55,26 @@ textarea{min-height:84px;resize:vertical}
 .obs-block .rm-obs{position:absolute;top:8px;right:8px;border:none;background:none;color:var(--danger);font-size:18px;cursor:pointer;padding:4px}
 .add-obs{width:100%;border:1.5px dashed var(--line);background:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;color:var(--field-green);cursor:pointer;margin-top:4px;font-family:inherit}
 .err{border-color:var(--danger)!important;background:#fdf3f2}
-.err-msg{color:var(--danger);font-size:12.5px;margin-top:4px;display:none}
-.send-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-body{padding-bottom:140px}
+.err-msg{color:var(--danger);font-size:12.5px;margin-top:6px;display:none}
 .actionbar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:10px 14px 14px;z-index:60;box-shadow:0 -4px 12px rgba(0,0,0,.08)}
-.actionbar .inner{max-width:560px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.btn{border:none;border-radius:10px;padding:12px 8px;font-size:13.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit}
-.btn-wa{background:#25d366;color:#fff}
-.btn-mail{background:var(--ink);color:#fff}
-.btn-share{background:var(--marigold);color:#3a2a00}
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:24px;font-size:13.5px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:99;max-width:90%;text-align:center}
+.actionbar .inner{max-width:560px;margin:0 auto}
+.btn-send{width:100%;border:none;border-radius:12px;padding:15px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;background:var(--field-green);color:#fff;letter-spacing:.3px}
+.btn-send-inline{width:100%;border:none;border-radius:12px;padding:15px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;background:var(--field-green);color:#fff;letter-spacing:.3px}
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:24px;font-size:13.5px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:99;max-width:90%;text-align:center}
 .toast.show{opacity:1}
 .sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:80;display:none;align-items:flex-end;justify-content:center}
 .sheet-bg.open{display:flex}
-.sheet{background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:560px;padding:18px 16px 26px;max-height:75vh;overflow-y:auto}
+.sheet{background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:560px;padding:18px 16px 26px;max-height:80vh;overflow-y:auto}
 .sheet h3{font-size:15px;font-weight:700;margin-bottom:4px}
 .sheet p{font-size:12.5px;color:var(--muted);margin-bottom:14px}
-.send-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
-.send-row .who{font-size:14px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.send-row .go{border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;color:#fff;flex:none}
-.send-row .go.wa{background:#25d366}
-.send-row .go.gm{background:#c0392b}
-.send-row .go.mailapp{background:var(--ink)}
-.send-row .go.done{background:#9ab5a4}
+.step-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.step-num{width:30px;height:30px;border-radius:50%;background:#eef2ec;color:var(--field-green-dark);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none}
+.step-row.done .step-num{background:var(--field-green);color:#fff}
+.step-info{flex:1;min-width:0}
+.step-info .st{font-size:14px;font-weight:700}
+.step-info .sd{font-size:12px;color:var(--muted)}
+.step-go{border:none;border-radius:8px;padding:10px 18px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;color:#fff;background:var(--field-green);flex:none}
+.step-row.done .step-go{background:#9ab5a4}
 .sheet .close-sheet{width:100%;margin-top:16px;border:1.5px solid var(--line);background:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
@@ -121,21 +114,21 @@ body{padding-bottom:140px}
     </div>
     <label class="fl">DS name <span class="req">*</span></label>
     <input type="text" id="dsName" placeholder="Distributor salesman name">
-    <label class="fl">Visited by (your name)</label>
+    <label class="fl">Visited by (your name) <span class="req">*</span></label>
     <input type="text" id="visitorName" placeholder="Your name & designation">
-    <label class="fl">Working with (accompanying persons)</label>
+    <label class="fl">Working with (accompanying persons) <span class="req">*</span></label>
     <div class="addline">
       <input type="text" id="companionInput" placeholder="e.g. Rakesh — ASM">
       <button type="button" id="companionAdd">Add</button>
     </div>
     <div class="chips" id="companionChips"></div>
-    <p class="hint">Add each person one by one. They appear in the report under "Working with".</p>
-    <div class="err-msg" id="basicErr">Please fill all mandatory visit details.</div>
+    <p class="hint">Add each person and tap Add. If you visited alone, add "Self".</p>
+    <div class="err-msg" id="basicErr">Please fill all visit details, including at least one person under Working with.</div>
   </div>
 
   <div class="card">
-    <h2><span class="dot"></span>Evidence — Photos / Video</h2>
-    <div class="media-btns two">
+    <h2><span class="dot"></span>Evidence — Photos / Video <span style="color:var(--danger)">*</span></h2>
+    <div class="media-btns">
       <button type="button" class="media-btn" id="photoBtn"><span>&#128247;</span>Take photo</button>
       <button type="button" class="media-btn" id="videoBtn"><span>&#127909;</span>Record video</button>
     </div>
@@ -144,12 +137,12 @@ body{padding-bottom:140px}
     <input class="file-hidden" type="file" id="videoInput" accept="video/*" capture="environment">
     <input class="file-hidden" type="file" id="galleryInput" accept="image/*,video/*" multiple>
     <div class="media-list" id="mediaList"></div>
-    <p class="hint">Take photo / Record video open the camera directly. Use the gallery button for anything captured earlier.</p>
+    <div class="err-msg" id="mediaErr">Attach at least one photo or video as evidence of the visit.</div>
   </div>
 
   <div class="card">
     <h2><span class="dot"></span>Observations &amp; Way Forward</h2>
-    <p class="hint" style="margin-bottom:10px">Every observation must have an action (way forward), an owner, and a timeline. The report cannot be sent without them.</p>
+    <p class="hint" style="margin-bottom:10px">Every observation must have an action (way forward), an owner, and a timeline.</p>
     <div id="obsContainer"></div>
     <button type="button" class="add-obs" id="addObsBtn">+ Add another observation</button>
     <div class="err-msg" id="obsErr">Each observation needs the observation text, way forward, owner and timeline filled in.</div>
@@ -157,39 +150,33 @@ body{padding-bottom:140px}
 
   <div class="card">
     <h2><span class="dot"></span>Send To</h2>
-    <label class="fl">WhatsApp recipients</label>
-    <div class="addline">
-      <input type="text" id="waInput" inputmode="numeric" placeholder="Number with country code, e.g. 919876543210">
-      <button type="button" id="waAdd">Add</button>
+    <label class="fl">WhatsApp recipients <span class="req">*</span></label>
+    <div class="prefix-line">
+      <span class="prefix">+91</span>
+      <input type="tel" id="waInput" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number">
+      <button type="button" id="waAdd" style="border:none;border-radius:8px;background:var(--field-green);color:#fff;font-size:14px;font-weight:700;padding:0 16px;cursor:pointer;font-family:inherit">Add</button>
     </div>
     <button type="button" class="contact-btn" id="pickContacts">&#128100; Pick from phone contacts</button>
     <div class="chips" id="waChips"></div>
-    <p class="hint">Add multiple numbers &mdash; you get a send list, one tap per person. Leave empty to pick the contact or group inside WhatsApp itself.</p>
-    <label class="fl">Email recipients</label>
+    <label class="fl">Email recipients <span class="req">*</span></label>
     <div class="addline">
       <input type="email" id="emailInput" placeholder="e.g. asm@company.com">
       <button type="button" id="emailAdd">Add</button>
     </div>
     <div class="chips" id="emailChips"></div>
     <p class="hint">All added emails go in the To line of one mail.</p>
+    <div class="err-msg" id="recipErr">Add at least one WhatsApp number and one email recipient.</div>
   </div>
 
-  <div class="card" id="sendCard">
-    <h2><span class="dot"></span>Send Report</h2>
-    <div class="send-grid">
-      <button type="button" class="btn btn-wa" id="btnWa2">WhatsApp</button>
-      <button type="button" class="btn btn-mail" id="btnMail2">Email</button>
-      <button type="button" class="btn btn-share" id="btnShare2">Share + media</button>
-    </div>
+  <div class="card">
+    <button type="button" class="btn-send-inline" id="btnSend2">&#128228; &nbsp;Send Report</button>
   </div>
 
 </div>
 
 <div class="actionbar">
   <div class="inner">
-    <button type="button" class="btn btn-wa" id="btnWa">WhatsApp</button>
-    <button type="button" class="btn btn-mail" id="btnMail">Email</button>
-    <button type="button" class="btn btn-share" id="btnShare">Share + media</button>
+    <button type="button" class="btn-send" id="btnSend">&#128228; &nbsp;Send Report</button>
   </div>
 </div>
 
@@ -210,22 +197,21 @@ body{padding-bottom:140px}
 
 var mediaFiles = [];
 var companions = [];
-var waNumbers = [];
+var waNumbers = [];   // stored as 10-digit; 91 added on send
 var emails = [];
 
 function $(id){ return document.getElementById(id); }
 function on(id, fn){ var el=$(id); if(el) el.addEventListener('click', fn); }
 
+var inited = false;
 document.addEventListener('DOMContentLoaded', init);
 if(document.readyState !== 'loading') init();
-var inited = false;
 
 function init(){
   if(inited) return; inited = true;
 
   $('visitDate').value = new Date().toISOString().slice(0,10);
 
-  // ---- chip lists ----
   on('companionAdd', function(){ addChip('companionInput', companions, 'companionChips', validateName); });
   on('waAdd', function(){ addChip('waInput', waNumbers, 'waChips', validateWa); });
   on('emailAdd', function(){ addChip('emailInput', emails, 'emailChips', validateEmail); });
@@ -239,8 +225,9 @@ function init(){
       }
     });
   });
+  // digits only in wa input
+  $('waInput').addEventListener('input', function(){ this.value = this.value.replace(/\D/g,'').slice(0,10); });
 
-  // ---- media ----
   on('photoBtn', function(){ $('photoInput').click(); });
   on('videoBtn', function(){ $('videoInput').click(); });
   on('galleryBtn', function(){ $('galleryInput').click(); });
@@ -249,17 +236,11 @@ function init(){
   $('galleryInput').addEventListener('change', function(){ handleFilesAuto(this); });
   on('pickContacts', pickFromContacts);
 
-  // ---- observations ----
   on('addObsBtn', addObservation);
   addObservation();
 
-  // ---- senders ----
-  on('btnWa', sendWhatsApp);
-  on('btnMail', sendEmail);
-  on('btnShare', shareWithMedia);
-  on('btnWa2', sendWhatsApp);
-  on('btnMail2', sendEmail);
-  on('btnShare2', shareWithMedia);
+  on('btnSend', openSendFlow);
+  on('btnSend2', openSendFlow);
   on('sheetClose', closeSheet);
   $('sheetBg').addEventListener('click', function(e){ if(e.target === this) closeSheet(); });
 }
@@ -268,7 +249,7 @@ function init(){
 function validateName(v){ return v.length > 0 ? v : null; }
 function validateWa(v){
   v = v.replace(/\D/g,'');
-  if(v.length < 10){ toast('Include country code, e.g. 91XXXXXXXXXX'); return null; }
+  if(v.length !== 10){ toast('Enter the 10-digit mobile number (without +91)'); return null; }
   return v;
 }
 function validateEmail(v){
@@ -290,7 +271,7 @@ function renderChips(arr, chipsId){
     var c = document.createElement('span');
     c.className = 'chip';
     var txt = document.createElement('span');
-    txt.textContent = (chipsId === 'waChips' ? '+' : '') + v;
+    txt.textContent = (chipsId === 'waChips' ? '+91 ' : '') + v;
     var b = document.createElement('button');
     b.type = 'button';
     b.innerHTML = '&#10005;';
@@ -300,12 +281,40 @@ function renderChips(arr, chipsId){
   });
 }
 
+// ---------- contact picker ----------
+function pickFromContacts(){
+  if('contacts' in navigator && 'select' in navigator.contacts){
+    navigator.contacts.select(['name','tel'], {multiple:true}).then(function(contacts){
+      var added = 0;
+      contacts.forEach(function(c){
+        var tel = (c.tel && c.tel[0]) ? String(c.tel[0]).replace(/\D/g,'') : '';
+        if(!tel) return;
+        if(tel.length > 10 && tel.slice(0,2) === '91') tel = tel.slice(-10); // strip 91
+        if(tel.length === 10 && waNumbers.indexOf(tel) === -1){ waNumbers.push(tel); added++; }
+      });
+      renderChips(waNumbers,'waChips');
+      toast(added ? added + ' contact(s) added' : 'No usable 10-digit numbers found');
+    }).catch(function(){});
+  } else {
+    toast('Contact picker works in Chrome on Android. On other phones, type the 10-digit number.');
+  }
+}
+
 // ---------- media ----------
 function handleFiles(input, kind){
   for(var i=0;i<input.files.length;i++){ mediaFiles.push({file:input.files[i], kind:kind}); }
   input.value = '';
   renderMedia();
-  toast('Added — see the list below the buttons');
+  toast('Added \u2014 see the list below');
+}
+function handleFilesAuto(input){
+  for(var i=0;i<input.files.length;i++){
+    var f = input.files[i];
+    var kind = f.type.indexOf('video')===0 ? 'video' : 'photo';
+    mediaFiles.push({file:f, kind:kind});
+  }
+  input.value=''; renderMedia();
+  toast('Added \u2014 see the list below');
 }
 function fmtSize(b){ return b>1048576 ? (b/1048576).toFixed(1)+' MB' : Math.round(b/1024)+' KB'; }
 function renderMedia(){
@@ -319,7 +328,7 @@ function renderMedia(){
     else { thumb = document.createElement('video'); thumb.src = URL.createObjectURL(m.file); thumb.muted = true; }
     var meta = document.createElement('div'); meta.className='meta';
     var nm = document.createElement('div'); nm.className='nm'; nm.textContent = m.file.name;
-    var sz = document.createElement('div'); sz.className='sz'; sz.textContent = m.kind + ' · ' + fmtSize(m.file.size);
+    var sz = document.createElement('div'); sz.className='sz'; sz.textContent = m.kind + ' \u00b7 ' + fmtSize(m.file.size);
     meta.appendChild(nm); meta.appendChild(sz);
     var rm = document.createElement('button'); rm.type='button'; rm.className='rm'; rm.innerHTML='&#10005;';
     rm.addEventListener('click', function(){ mediaFiles.splice(i,1); renderMedia(); });
@@ -328,52 +337,20 @@ function renderMedia(){
   });
 }
 
-function handleFilesAuto(input){
-  for(var i=0;i<input.files.length;i++){
-    var f = input.files[i];
-    var kind = f.type.indexOf('video')===0 ? 'video' : 'photo';
-    mediaFiles.push({file:f, kind:kind});
-  }
-  input.value=''; renderMedia();
-  toast('Added \u2014 see the list below');
-}
-
-// ---------- contact picker ----------
-function pickFromContacts(){
-  if('contacts' in navigator && 'select' in navigator.contacts){
-    navigator.contacts.select(['name','tel'], {multiple:true}).then(function(contacts){
-      var added = 0;
-      contacts.forEach(function(c){
-        var tel = (c.tel && c.tel[0]) ? String(c.tel[0]).replace(/\D/g,'') : '';
-        if(!tel) return;
-        if(tel.length === 10) tel = '91' + tel; // assume India if no country code
-        if(tel.length >= 11 && waNumbers.indexOf(tel) === -1){ waNumbers.push(tel); added++; }
-      });
-      renderChips(waNumbers,'waChips');
-      toast(added ? added + ' contact(s) added' : 'No usable numbers found in selection');
-    }).catch(function(){ /* user cancelled */ });
-  } else {
-    toast('Contact picker needs Chrome on Android via the hosted web link. On other phones, type the number \u2014 or leave empty and pick the contact inside WhatsApp.');
-  }
-}
-
 // ---------- observations ----------
 function addObservation(){
   var div = document.createElement('div');
   div.className = 'obs-block';
   var n = document.querySelectorAll('.obs-block').length + 1;
-
   var title = document.createElement('div');
   title.className='obs-title'; title.textContent='Observation ' + n;
   div.appendChild(title);
-
   if(n > 1){
     var rm = document.createElement('button');
     rm.type='button'; rm.className='rm-obs'; rm.innerHTML='&#10005;';
     rm.addEventListener('click', function(){ div.remove(); renumber(); });
     div.appendChild(rm);
   }
-
   div.insertAdjacentHTML('beforeend',
     '<label class="fl">What did you observe? <span class="req">*</span></label>' +
     '<textarea class="obs-text" placeholder="e.g. Scheme POSM not displayed at counter; competitor leaflet visible"></textarea>' +
@@ -393,14 +370,19 @@ function renumber(){
   for(var i=0;i<blocks.length;i++){ blocks[i].querySelector('.obs-title').textContent = 'Observation ' + (i+1); }
 }
 
-// ---------- validation ----------
+// ---------- validation (everything mandatory) ----------
 function validate(){
   var ok = true;
-  ['visitDate','marketName','outletName','wdCode','wdName','dsName'].forEach(function(id){
+  ['visitDate','marketName','outletName','wdCode','wdName','dsName','visitorName'].forEach(function(id){
     var el = $(id);
     if(!el.value.trim()){ el.classList.add('err'); ok=false; } else el.classList.remove('err');
   });
-  $('basicErr').style.display = ok ? 'none':'block';
+  var compOk = companions.length > 0;
+  $('companionChips').classList.toggle('err-ring', !compOk);
+  $('basicErr').style.display = (ok && compOk) ? 'none':'block';
+
+  var mediaOk = mediaFiles.length > 0;
+  $('mediaErr').style.display = mediaOk ? 'none':'block';
 
   var obsOk = true;
   var blocks = document.querySelectorAll('.obs-block');
@@ -413,12 +395,16 @@ function validate(){
   }
   $('obsErr').style.display = obsOk ? 'none':'block';
 
-  if(!ok || !obsOk){
-    toast('Please complete all mandatory fields (marked *)');
-    var firstErr = document.querySelector('.err');
+  var recipOk = waNumbers.length > 0 && emails.length > 0;
+  $('recipErr').style.display = recipOk ? 'none':'block';
+
+  var allOk = ok && compOk && mediaOk && obsOk && recipOk;
+  if(!allOk){
+    toast('Please complete all mandatory sections');
+    var firstErr = document.querySelector('.err') || document.querySelector('.err-msg[style*="block"]');
     if(firstErr) firstErr.scrollIntoView({behavior:'smooth',block:'center'});
   }
-  return ok && obsOk;
+  return allOk;
 }
 
 // ---------- report ----------
@@ -427,8 +413,8 @@ function buildReport(){
   function fmtD(v){ if(!v) return ''; return new Date(v).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }
   var t = '*MARKET WORKING REPORT*\n';
   t += 'Date: ' + fmtD(g('visitDate')) + '\n';
-  if(g('visitorName')) t += 'Visited by: ' + g('visitorName') + '\n';
-  if(companions.length) t += 'Working with: ' + companions.join(', ') + '\n';
+  t += 'Visited by: ' + g('visitorName') + '\n';
+  t += 'Working with: ' + companions.join(', ') + '\n';
   t += '\n*VISIT DETAILS*\n';
   t += 'Market: ' + g('marketName') + '\n';
   t += 'Outlet: ' + g('outletName') + '\n';
@@ -442,15 +428,106 @@ function buildReport(){
     t += '   *Way forward:* ' + b.querySelector('.obs-action').value.trim() + '\n';
     t += '   *Owner:* ' + b.querySelector('.obs-owner').value.trim() + ' | *Timeline:* ' + fmtD(b.querySelector('.obs-date').value) + '\n';
   }
-  if(mediaFiles.length){
-    var p=0,v=0;
-    mediaFiles.forEach(function(m){ if(m.kind==='photo')p++; else v++; });
-    t += '\n*Attachments:* ' + p + ' photo(s), ' + v + ' video(s)';
-  }
+  var p=0,v=0;
+  mediaFiles.forEach(function(m){ if(m.kind==='photo')p++; else v++; });
+  t += '\n*Attachments:* ' + p + ' photo(s), ' + v + ' video(s)';
   return t;
 }
 
-// ---------- send sheet ----------
+// ---------- single guided send flow ----------
+function openSendFlow(){
+  if(!validate()) return;
+
+  var rows = [];
+  var stepNo = 0;
+
+  function makeStep(title, desc, btnLabel, action){
+    stepNo++;
+    var row = document.createElement('div'); row.className='step-row';
+    var num = document.createElement('div'); num.className='step-num'; num.textContent = stepNo;
+    var info = document.createElement('div'); info.className='step-info';
+    info.innerHTML = '<div class="st">' + title + '</div><div class="sd">' + desc + '</div>';
+    var b = document.createElement('button'); b.type='button'; b.className='step-go'; b.textContent = btnLabel;
+    b.addEventListener('click', function(){
+      action();
+      row.classList.add('done');
+      b.textContent = 'Done \u2713';
+    });
+    row.appendChild(num); row.appendChild(info); row.appendChild(b);
+    return row;
+  }
+
+  // Step 1: WhatsApp text (per recipient if multiple)
+  if(waNumbers.length === 1){
+    rows.push(makeStep('WhatsApp \u2014 report text', 'Opens the chat with the report. Send, then come back.', 'Open', function(){
+      openUrl('https://wa.me/91' + waNumbers[0] + '?text=' + encodeURIComponent(buildReport()));
+    }));
+  } else {
+    waNumbers.forEach(function(num){
+      rows.push(makeStep('WhatsApp text \u2192 +91 ' + num, 'Opens the chat with the report. Send, then come back.', 'Open', function(){
+        openUrl('https://wa.me/91' + num + '?text=' + encodeURIComponent(buildReport()));
+      }));
+    });
+  }
+
+  // Step 2: media via share sheet
+  var files = mediaFiles.map(function(m){ return m.file; });
+  if(navigator.canShare && navigator.canShare({files:files})){
+    rows.push(makeStep('WhatsApp \u2014 media (' + files.length + ' file' + (files.length>1?'s':'') + ')',
+      'Share menu opens \u2192 choose WhatsApp \u2192 same chat(s). Media goes through.', 'Share', function(){
+      navigator.share({files:files}).catch(function(e){ if(e && e.name!=='AbortError') toast('Share blocked by browser'); });
+    }));
+  } else {
+    rows.push(makeStep('WhatsApp \u2014 media', 'This browser cannot hand files to WhatsApp; attach from gallery inside the chat.', 'Noted', function(){}));
+  }
+
+  // Step 3: Email
+  rows.push(makeStep('Email \u2014 report', 'Opens your mail app with recipients, subject and report filled in.', 'Open', function(){
+    sendEmailNow();
+  }));
+
+  openSheet('Send Report \u2014 complete each step', 'Work down the list. Each button opens the app; send there and come back for the next step.', rows);
+}
+
+function sendEmailNow(){
+  function g(id){ return $(id).value.trim(); }
+  var to = emails.join(',');
+  var subject = 'Market Working Report \u2014 ' + g('outletName') + ', ' + g('marketName') + ' (' + g('visitDate') + ')';
+  var body = buildReport().replace(/\*/g,'');
+  var href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  // use a real anchor click; most reliable way to trigger the mail app
+  var a = document.createElement('a');
+  a.href = href;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  // fallback: copy the mail content in case no mail app is configured
+  setTimeout(function(){
+    copyText('To: ' + to + '\nSubject: ' + subject + '\n\n' + body);
+  }, 1500);
+}
+
+function copyText(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){ toast('Mail content also copied \u2014 paste if the app did not prefill'); },
+      function(){ legacyCopy(text); });
+  } else legacyCopy(text);
+}
+function legacyCopy(text){
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); toast('Mail content copied \u2014 paste if needed'); }
+  catch(e){}
+  document.body.removeChild(ta);
+}
+
+function openUrl(url){
+  var w = window.open(url, '_blank');
+  if(!w){ window.location.href = url; }
+}
+
 function openSheet(title, sub, rows){
   $('sheetTitle').textContent = title;
   $('sheetSub').textContent = sub;
@@ -460,132 +537,6 @@ function openSheet(title, sub, rows){
   $('sheetBg').classList.add('open');
 }
 function closeSheet(){ $('sheetBg').classList.remove('open'); }
-function makeRow(who, btnLabel, btnClass, action){
-  var row = document.createElement('div'); row.className='send-row';
-  var w = document.createElement('div'); w.className='who'; w.textContent = who;
-  var b = document.createElement('button'); b.type='button'; b.className='go '+btnClass; b.textContent = btnLabel;
-  b.addEventListener('click', function(){
-    action();
-    b.textContent = 'Sent \u2713';
-    b.classList.add('done');
-  });
-  row.appendChild(w); row.appendChild(b);
-  return row;
-}
-function openUrl(url){
-  var w = window.open(url, '_blank');
-  if(!w){ window.location.href = url; } // popup blocked fallback
-}
-
-// ---------- WhatsApp ----------
-function sendWhatsApp(){
-  if(!validate()) return;
-  // Known WhatsApp behaviour: when a share contains BOTH text and files,
-  // WhatsApp keeps only one of them (usually the text) and silently drops the other.
-  // So we use a guided 2-step flow: text first, media second, same chat.
-  if(mediaFiles.length){
-    var files = mediaFiles.map(function(m){ return m.file; });
-    var canFiles = navigator.canShare && navigator.canShare({files:files});
-    var rows = [];
-    rows.push(makeRow('Step 1 \u2014 Report text', 'Send', 'wa', function(){
-      var txt = encodeURIComponent(buildReport());
-      var url = (waNumbers.length === 1) ? 'https://wa.me/' + waNumbers[0] + '?text=' + txt
-                                         : 'https://wa.me/?text=' + txt;
-      openUrl(url);
-    }));
-    if(canFiles){
-      rows.push(makeRow('Step 2 \u2014 ' + files.length + ' media file(s)', 'Share', 'wa', function(){
-        // files only, NO text \u2014 this is what makes WhatsApp actually attach them
-        navigator.share({files:files})
-          .then(function(){ toast('Media sent \u2014 done!'); })
-          .catch(function(e){ if(e && e.name!=='AbortError') toast('Share blocked by browser'); });
-      }));
-    } else {
-      rows.push(makeRow('Step 2 \u2014 attach media manually', 'Info', 'mailapp', function(){
-        toast('This browser cannot hand files to WhatsApp \u2014 attach from gallery inside the chat.');
-      }));
-    }
-    openSheet('Send with media (2 quick steps)',
-      'Step 1 opens WhatsApp with the report \u2014 send it and come back here. Step 2 opens the share menu \u2014 choose WhatsApp and the SAME chat, and the media goes through. (WhatsApp drops attachments if text and files are sent in one share, so it must be two steps.)',
-      rows);
-    return;
-  }
-  sendWhatsAppText();
-}
-function sendWhatsAppText(){
-  closeSheet();
-  var txt = encodeURIComponent(buildReport());
-  if(waNumbers.length === 0){
-    openUrl('https://wa.me/?text=' + txt);
-    toast('Opening WhatsApp \u2014 pick the contact or group');
-    return;
-  }
-  if(waNumbers.length === 1){
-    openUrl('https://wa.me/' + waNumbers[0] + '?text=' + txt);
-    return;
-  }
-  var rows = waNumbers.map(function(num){
-    return makeRow('+' + num, 'Send', 'wa', function(){
-      openUrl('https://wa.me/' + num + '?text=' + encodeURIComponent(buildReport()));
-    });
-  });
-  openSheet('Send on WhatsApp', 'Tap Send for each recipient. WhatsApp opens pre-filled \u2014 hit send there and come back.', rows);
-}
-
-// ---------- Email ----------
-function sendEmail(){
-  if(!validate()) return;
-  var to = emails.join(',');
-  function g(id){ return $(id).value.trim(); }
-  var subject = 'Market Working Report \u2014 ' + g('outletName') + ', ' + g('marketName') + ' (' + g('visitDate') + ')';
-  var body = buildReport().replace(/\*/g,'');
-  var rows = [];
-  rows.push(makeRow('Gmail (recommended)', 'Open', 'gm', function(){
-    openUrl('https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to) +
-      '&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body));
-  }));
-  rows.push(makeRow('Default Mail app', 'Open', 'mailapp', function(){
-    window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-  }));
-  rows.push(makeRow('Copy report text', 'Copy', 'mailapp', function(){
-    copyText(body + '\n\nTo: ' + to);
-  }));
-  var sub = emails.length ? 'Sending to: ' + emails.join(', ') : 'No email added yet \u2014 you can still open a blank draft and type the address.';
-  openSheet('Send by Email', sub, rows);
-}
-
-function copyText(text){
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(function(){ toast('Copied \u2014 paste anywhere'); },
-      function(){ legacyCopy(text); });
-  } else legacyCopy(text);
-}
-function legacyCopy(text){
-  var ta = document.createElement('textarea');
-  ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
-  document.body.appendChild(ta); ta.select();
-  try{ document.execCommand('copy'); toast('Copied \u2014 paste anywhere'); }
-  catch(e){ toast('Could not copy automatically'); }
-  document.body.removeChild(ta);
-}
-
-// ---------- Share with media ----------
-function shareWithMedia(){
-  if(!validate()) return;
-  var text = buildReport().replace(/\*/g,'');
-  var files = mediaFiles.map(function(m){ return m.file; });
-  if(navigator.canShare && files.length && navigator.canShare({files:files})){
-    navigator.share({title:'Market Working Report', text:text, files:files})
-      .then(function(){ toast('Shared!'); })
-      .catch(function(e){ if(e && e.name!=='AbortError') toast('Share blocked \u2014 use WhatsApp/Email buttons'); });
-  } else if(navigator.share){
-    navigator.share({title:'Market Working Report', text:text})
-      .then(function(){ toast('Shared (text only)'); })
-      .catch(function(){});
-  } else {
-    copyText(text);
-  }
-}
 
 function toast(msg){
   var t = $('toast');
