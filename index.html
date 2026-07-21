@@ -22,10 +22,10 @@ header p{font-size:12.5px;opacity:.85;margin-top:2px}
 label.fl{display:block;font-size:13px;font-weight:600;margin:12px 0 5px;color:var(--ink)}
 label.fl:first-of-type{margin-top:0}
 label .req{color:var(--danger)}
-input[type=text],input[type=date],input[type=email],input[type=tel],textarea{width:100%;border:1.5px solid var(--line);border-radius:8px;padding:11px 12px;font-size:16px;background:#fff;color:var(--ink);font-family:inherit}
+input[type=text],input[type=date],input[type=email],input[type=tel],input[type=number],textarea{width:100%;border:1.5px solid var(--line);border-radius:8px;padding:11px 12px;font-size:16px;background:#fff;color:var(--ink);font-family:inherit;line-height:1.4;height:auto;min-height:44px}
 input:focus,textarea:focus{outline:none;border-color:var(--field-green)}
 textarea{min-height:76px;resize:vertical}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
 .hint{font-size:12px;color:var(--muted);margin-top:4px}
 .addline{display:flex;gap:8px;align-items:stretch}
 .addline input{flex:1}
@@ -87,8 +87,18 @@ textarea{min-height:76px;resize:vertical}
 .step-go{border:none;border-radius:8px;padding:10px 18px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;color:#fff;background:var(--field-green);flex:none}
 .step-row.done .step-go{background:#9ab5a4}
 .sheet .close-sheet{width:100%;margin-top:16px;border:1.5px solid var(--line);background:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/vfs_fonts.js"></script>
 </head>
 <body>
 
@@ -104,8 +114,9 @@ textarea{min-height:76px;resize:vertical}
     <h2><span class="dot"></span>Visit Day Details (fill once)</h2>
     <div class="row2">
       <div>
-        <label class="fl">Date <span class="req">*</span></label>
-        <input type="date" id="visitDate">
+        <label class="fl">Date</label>
+        <input type="text" id="visitDateDisplay" readonly style="background:#eef2ec;color:var(--field-green-dark);font-weight:700">
+        <input type="hidden" id="visitDate">
       </div>
       <div>
         <label class="fl">Main visitor <span class="req">*</span></label>
@@ -230,7 +241,9 @@ if(document.readyState !== 'loading') init();
 function init(){
   if(inited) return; inited = true;
 
-  $('visitDate').value = new Date().toISOString().slice(0,10);
+  var today = new Date();
+  $('visitDate').value = today.toISOString().slice(0,10);
+  $('visitDateDisplay').value = today.toLocaleDateString('en-IN',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
 
   on('companionAdd', function(){ addChip('companionInput', companions, 'companionChips', validateName); });
   on('waAdd', function(){ addChip('waInput', waNumbers, 'waChips', validateWa); });
@@ -376,7 +389,14 @@ function addEntry(type){
   if(type === 'outlet'){
     div.insertAdjacentHTML('beforeend',
       '<label class="fl">Outlet name <span class="req">*</span></label>' +
-      '<input type="text" class="e-outlet" placeholder="e.g. Sri Balaji Kirana">');
+      '<input type="text" class="e-outlet" placeholder="e.g. Sri Balaji Kirana">' +
+      '<div class="row2"><div>' +
+      '<label class="fl">Total Sales Value <span class="req">*</span></label>' +
+      '<input type="number" class="e-sales" placeholder="e.g. 45000">' +
+      '</div><div>' +
+      '<label class="fl">TLC <span class="req">*</span></label>' +
+      '<input type="number" class="e-tlc" placeholder="e.g. 15">' +
+      '</div></div>');
   }
 
   var obsWrap = document.createElement('div');
@@ -454,8 +474,10 @@ function validate(){
   for(var i=0;i<entries.length;i++){
     var e = entries[i];
     if(e.dataset.type === 'outlet'){
-      var el = e.querySelector('.e-outlet');
-      if(!el.value.trim()){ el.classList.add('err'); entryOk=false; } else el.classList.remove('err');
+      ['.e-outlet', '.e-sales', '.e-tlc'].forEach(function(sel){
+        var el = e.querySelector(sel);
+        if(!el.value.trim()){ el.classList.add('err'); entryOk=false; } else el.classList.remove('err');
+      });
     }
     var blocks = e.querySelectorAll('.obs-block');
     if(!blocks.length) entryOk = false;
@@ -524,6 +546,126 @@ function buildReport(){
 }
 
 // ---------- guided send flow ----------
+function generatePDF(){
+  function g(id){ return $(id).value.trim(); }
+  function fmtD(v){ if(!v) return ''; return new Date(v).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }
+  
+  toast('Generating PDF...');
+  
+  var imagePromises = mediaFiles.map(function(m){
+    return new Promise(function(resolve){
+      var reader = new FileReader();
+      reader.onload = function(e){
+        resolve({data: e.target.result, type: m.kind});
+      };
+      reader.readAsDataURL(m.file);
+    });
+  });
+  
+  Promise.all(imagePromises).then(function(images){
+    if(typeof pdfMake === 'undefined'){
+      toast('Loading PDF library...');
+      var script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/pdfmake.min.js';
+      script.onload = function(){
+        var vfs = document.createElement('script');
+        vfs.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/vfs_fonts.js';
+        vfs.onload = function(){
+          setTimeout(function(){ makePDFAndShare(images, g, fmtD); }, 800);
+        };
+        document.head.appendChild(vfs);
+      };
+      document.head.appendChild(script);
+      return;
+    }
+    makePDFAndShare(images, g, fmtD);
+  }).catch(function(err){
+    toast('Error preparing PDF; check file sizes');
+  });
+}
+
+function makePDFAndShare(images, g, fmtD){
+  var docDef = {
+    content: [],
+    styles: {
+      header: {fontSize: 14, bold: true, margin: [0, 0, 0, 10], color: '#1e6f50'},
+      subheader: {fontSize: 12, bold: true, margin: [0, 8, 0, 6], color: '#1e6f50'},
+      outlet: {fontSize: 11, bold: true, margin: [0, 10, 0, 4], color: '#155a40'},
+      label: {fontSize: 10, bold: true, margin: [0, 6, 0, 2], color: '#1b2430'},
+      normal: {fontSize: 10, margin: [0, 0, 0, 4]},
+      hint: {fontSize: 9, color: '#6b7568', margin: [0, 2, 0, 0]}
+    },
+    defaultStyle: {font: 'Roboto'}
+  };
+  
+  docDef.content.push({text: 'MARKET VISIT OBSERVATIONS', style: 'header'});
+  docDef.content.push({text: 'Hyderabad Branch', style: 'subheader'});
+  docDef.content.push({columns: [{text: 'Date: ' + fmtD(g('visitDate')), fontSize: 10}, {text: 'Visitor: ' + g('visitorName'), fontSize: 10}], margin: [0, 0, 0, 6]});
+  docDef.content.push({text: 'Working with: ' + companions.join(', '), fontSize: 10, margin: [0, 0, 0, 6]});
+  docDef.content.push({columns: [{text: 'Town: ' + g('hdrTown'), fontSize: 10}, {text: 'Market: ' + g('hdrMarket'), fontSize: 10}], margin: [0, 0, 0, 4]});
+  docDef.content.push({columns: [{text: 'WD: ' + g('hdrWdName') + ' (' + g('hdrWdCode') + ')', fontSize: 10}, {text: 'DS: ' + g('hdrDs'), fontSize: 10}], margin: [0, 0, 0, 12]});
+  docDef.content.push({text: '', margin: [0, 0, 0, 8]});
+  
+  var entries = document.querySelectorAll('.entry');
+  var oc = 0, sc = 0;
+  for(var i=0;i<entries.length;i++){
+    var e = entries[i];
+    function ev(sel){ var el = e.querySelector(sel); return el ? el.value.trim() : ''; }
+    
+    if(e.dataset.type === 'outlet'){
+      oc++;
+      docDef.content.push({text: 'OUTLET VISIT ' + oc + ': ' + ev('.e-outlet'), style: 'outlet'});
+      var sv = ev('.e-sales'), tlc = ev('.e-tlc');
+      if(sv || tlc){
+        var detailStr = [];
+        if(sv) detailStr.push('Sales Value: \u20B9' + sv);
+        if(tlc) detailStr.push('TLC: ' + tlc);
+        docDef.content.push({text: detailStr.join(' | '), fontSize: 9, margin: [0, 0, 0, 6], color: '#6b7568'});
+      }
+    } else {
+      sc++;
+      docDef.content.push({text: 'MARKET SUMMARY ' + sc, style: 'outlet'});
+      docDef.content.push({text: '', margin: [0, 0, 0, 4]});
+    }
+    
+    var blocks = e.querySelectorAll('.obs-block');
+    for(var j=0;j<blocks.length;j++){
+      var b = blocks[j];
+      docDef.content.push({text: 'Observation ' + (j+1) + ':', style: 'label'});
+      docDef.content.push({text: b.querySelector('.obs-text').value.trim(), style: 'normal'});
+      docDef.content.push({text: 'Way Forward: ' + b.querySelector('.obs-action').value.trim(), style: 'normal'});
+      docDef.content.push({text: 'Owner: ' + b.querySelector('.obs-owner').value.trim() + ' | Timeline: ' + fmtD(b.querySelector('.obs-date').value), style: 'hint', margin: [0, 2, 0, 8]});
+    }
+    docDef.content.push({text: '', margin: [0, 0, 0, 4]});
+  }
+  
+  if(images.length){
+    docDef.content.push({text: 'CAPTURES', style: 'header'});
+    images.forEach(function(img){
+      docDef.content.push({image: img.data, width: 450, margin: [0, 0, 0, 12]});
+    });
+  }
+  
+  var pdfDocGenerator = pdfMake.createPdf(docDef);
+  pdfDocGenerator.getBase64(function(base64){
+    var binaryString = atob(base64);
+    var bytes = new Uint8Array(binaryString.length);
+    for(var i=0;i<binaryString.length;i++){
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    var blob = new Blob([bytes], {type: 'application/pdf'});
+    var file = new File([blob], 'Market-Visit-Report-' + g('visitDate') + '.pdf', {type: 'application/pdf'});
+    
+    if(navigator.canShare && navigator.canShare({files: [file]})){
+      navigator.share({files: [file], title: 'Market Visit Report'})
+        .then(function(){ toast('PDF shared!'); })
+        .catch(function(e){ if(e.name!=='AbortError') toast('Share blocked; try again'); });
+    } else {
+      toast('PDF share not supported on this browser; try copying to Files app manually');
+    }
+  });
+}
+
 function openSendFlow(){
   if(!validate()) return;
 
@@ -594,6 +736,10 @@ function openSendFlow(){
       }));
     }
   }
+
+  rows.push(makeStep('PDF Report', 'Downloads a detailed PDF with all details and captures. Open from Files and share via WhatsApp or email.', 'Generate', function(){
+    generatePDF();
+  }));
 
   openSheet('Send Report \u2014 complete each step', 'Work down the list. Each button opens the app; send there and come back for the next step.', rows);
 }
