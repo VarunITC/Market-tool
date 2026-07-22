@@ -38,6 +38,10 @@ textarea{min-height:76px;resize:vertical}
 .chip button{border:none;background:none;color:var(--danger);font-size:15px;cursor:pointer;line-height:1;padding:2px}
 .chips.err-ring{outline:2px solid var(--danger);outline-offset:4px;border-radius:8px}
 .media-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.outlet-media{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
+.outlet-media .media-label{font-size:12.5px;font-weight:700;color:var(--field-green-dark);margin-bottom:8px}
+.outlet-media.media-missing{outline:2px solid var(--danger);outline-offset:6px;border-radius:8px}
+.outlet-media.media-missing .media-label{color:var(--danger)}
 .media-btn{border:1.5px dashed var(--field-green);border-radius:10px;background:#f0f6f2;color:var(--field-green-dark);padding:14px 6px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;display:block;font-family:inherit;width:100%}
 .media-btn span{display:block;font-size:22px;margin-bottom:4px}
 .gallery-btn{width:100%;margin-top:10px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:10px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;font-family:inherit}
@@ -164,22 +168,7 @@ input[type=number] {
       <button type="button" class="add-entry" id="addOutletBtn">+ Outlet visit</button>
       <button type="button" class="add-entry sum" id="addSummaryBtn">+ Market summary</button>
     </div>
-    <div class="err-msg" id="entryErr">Every entry needs all its fields filled, including observation, way forward, owner and timeline.</div>
-  </div>
-
-  <!-- MEDIA -->
-  <div class="card">
-    <h2><span class="dot"></span>Market Visit Captures — Photos / Video <span style="color:var(--danger)">*</span></h2>
-    <div class="media-btns">
-      <button type="button" class="media-btn" id="photoBtn"><span>&#128247;</span>Take photo</button>
-      <button type="button" class="media-btn" id="videoBtn"><span>&#127909;</span>Record video</button>
-    </div>
-    <button type="button" class="gallery-btn" id="galleryBtn">&#128444;&#65039; Attach from gallery instead</button>
-    <input class="file-hidden" type="file" id="photoInput" accept="image/*" capture="environment">
-    <input class="file-hidden" type="file" id="videoInput" accept="video/*" capture="environment">
-    <input class="file-hidden" type="file" id="galleryInput" accept="image/*,video/*" multiple>
-    <div class="media-list" id="mediaList"></div>
-    <div class="err-msg" id="mediaErr">Attach at least one photo or video from the market visit.</div>
+    <div class="err-msg" id="entryErr">Every entry needs all fields filled, including at least one photo/video per outlet, observation, way forward, owner and timeline.</div>
   </div>
 
   <!-- RECIPIENTS -->
@@ -226,7 +215,6 @@ input[type=number] {
 (function(){
 "use strict";
 
-var mediaFiles = [];
 var companions = [];
 var waNumbers = [];
 var emails = [];
@@ -259,12 +247,6 @@ function init(){
   });
   $('waInput').addEventListener('input', function(){ this.value = this.value.replace(/\D/g,'').slice(0,10); });
 
-  on('photoBtn', function(){ $('photoInput').click(); });
-  on('videoBtn', function(){ $('videoInput').click(); });
-  on('galleryBtn', function(){ $('galleryInput').click(); });
-  $('photoInput').addEventListener('change', function(){ handleFiles(this,'photo'); });
-  $('videoInput').addEventListener('change', function(){ handleFiles(this,'video'); });
-  $('galleryInput').addEventListener('change', function(){ handleFilesAuto(this); });
   on('pickContacts', pickFromContacts);
 
   on('addOutletBtn', function(){ addEntry('outlet'); });
@@ -331,41 +313,38 @@ function pickFromContacts(){
   }
 }
 
-// ---------- media ----------
-function handleFiles(input, kind){
-  for(var i=0;i<input.files.length;i++){ mediaFiles.push({file:input.files[i], kind:kind}); }
-  input.value = '';
-  renderMedia();
-  toast('Added \u2014 see the list below');
-}
-function handleFilesAuto(input){
-  for(var i=0;i<input.files.length;i++){
-    var f = input.files[i];
-    var kind = f.type.indexOf('video')===0 ? 'video' : 'photo';
-    mediaFiles.push({file:f, kind:kind});
-  }
-  input.value=''; renderMedia();
-  toast('Added \u2014 see the list below');
-}
+// ---------- per-outlet media ----------
 function fmtSize(b){ return b>1048576 ? (b/1048576).toFixed(1)+' MB' : Math.round(b/1024)+' KB'; }
-function renderMedia(){
-  var list = $('mediaList');
-  list.innerHTML = '';
-  mediaFiles.forEach(function(m, i){
-    var item = document.createElement('div');
-    item.className = 'media-item';
+function addOutletMedia(entryDiv, listEl, input, kind){
+  for(var i=0;i<input.files.length;i++){ entryDiv._media.push({file:input.files[i], kind:kind}); }
+  input.value='';
+  renderOutletMedia(entryDiv, listEl);
+  toast('Added to this outlet');
+}
+function renderOutletMedia(entryDiv, listEl){
+  listEl.innerHTML='';
+  entryDiv._media.forEach(function(m, i){
+    var item = document.createElement('div'); item.className='media-item';
     var thumb;
-    if(m.kind==='photo'){ thumb = document.createElement('img'); thumb.src = URL.createObjectURL(m.file); }
-    else { thumb = document.createElement('video'); thumb.src = URL.createObjectURL(m.file); thumb.muted = true; }
-    var meta = document.createElement('div'); meta.className='meta';
-    var nm = document.createElement('div'); nm.className='nm'; nm.textContent = m.file.name;
-    var sz = document.createElement('div'); sz.className='sz'; sz.textContent = m.kind + ' \u00b7 ' + fmtSize(m.file.size);
+    if(m.kind==='photo'){ thumb=document.createElement('img'); thumb.src=URL.createObjectURL(m.file); }
+    else { thumb=document.createElement('video'); thumb.src=URL.createObjectURL(m.file); thumb.muted=true; }
+    var meta=document.createElement('div'); meta.className='meta';
+    var nm=document.createElement('div'); nm.className='nm'; nm.textContent=m.file.name;
+    var sz=document.createElement('div'); sz.className='sz'; sz.textContent=m.kind+' \u00b7 '+fmtSize(m.file.size);
     meta.appendChild(nm); meta.appendChild(sz);
-    var rm = document.createElement('button'); rm.type='button'; rm.className='rm'; rm.innerHTML='&#10005;';
-    rm.addEventListener('click', function(){ mediaFiles.splice(i,1); renderMedia(); });
+    var rm=document.createElement('button'); rm.type='button'; rm.className='rm'; rm.innerHTML='&#10005;';
+    rm.addEventListener('click', function(){ entryDiv._media.splice(i,1); renderOutletMedia(entryDiv, listEl); });
     item.appendChild(thumb); item.appendChild(meta); item.appendChild(rm);
-    list.appendChild(item);
+    listEl.appendChild(item);
   });
+}
+// Gather all media across outlets, in document order
+function gatherAllMedia(){
+  var all = [];
+  document.querySelectorAll('.entry').forEach(function(e){
+    if(e._media){ e._media.forEach(function(m){ all.push(m); }); }
+  });
+  return all;
 }
 
 // ---------- entries ----------
@@ -409,6 +388,34 @@ function addEntry(type){
   addObsBtn.textContent = '+ Add observation to this ' + (type==='outlet' ? 'outlet' : 'summary');
   addObsBtn.addEventListener('click', function(){ addObsBlock(obsWrap, type); });
   div.appendChild(addObsBtn);
+
+  // Per-outlet media capture (outlets only)
+  if(type === 'outlet'){
+    div._media = [];  // media tied to this outlet
+    var mediaSection = document.createElement('div');
+    mediaSection.className = 'outlet-media';
+    mediaSection.innerHTML =
+      '<div class="media-label">Photos / Video for this outlet <span class="req">*</span></div>' +
+      '<div class="media-btns">' +
+      '<button type="button" class="media-btn photo-btn"><span>&#128247;</span>Take photo</button>' +
+      '<button type="button" class="media-btn video-btn"><span>&#127909;</span>Record video</button>' +
+      '</div>';
+    var photoInput = document.createElement('input');
+    photoInput.type='file'; photoInput.accept='image/*'; photoInput.capture='environment'; photoInput.className='file-hidden';
+    var videoInput = document.createElement('input');
+    videoInput.type='file'; videoInput.accept='video/*'; videoInput.capture='environment'; videoInput.className='file-hidden';
+    var mediaList = document.createElement('div');
+    mediaList.className='media-list';
+    mediaSection.appendChild(photoInput);
+    mediaSection.appendChild(videoInput);
+    mediaSection.appendChild(mediaList);
+    div.appendChild(mediaSection);
+
+    mediaSection.querySelector('.photo-btn').addEventListener('click', function(){ photoInput.click(); });
+    mediaSection.querySelector('.video-btn').addEventListener('click', function(){ videoInput.click(); });
+    photoInput.addEventListener('change', function(){ addOutletMedia(div, mediaList, this, 'photo'); });
+    videoInput.addEventListener('change', function(){ addOutletMedia(div, mediaList, this, 'video'); });
+  }
 
   $('entriesContainer').appendChild(div);
   renumberEntries();
@@ -478,6 +485,13 @@ function validate(){
         var el = e.querySelector(sel);
         if(!el.value.trim()){ el.classList.add('err'); entryOk=false; } else el.classList.remove('err');
       });
+      // require at least one photo/video for this outlet
+      var ms = e.querySelector('.outlet-media');
+      if(!e._media || e._media.length === 0){
+        if(ms) ms.classList.add('media-missing'); entryOk=false;
+      } else {
+        if(ms) ms.classList.remove('media-missing');
+      }
     }
     var blocks = e.querySelectorAll('.obs-block');
     if(!blocks.length) entryOk = false;
@@ -490,13 +504,10 @@ function validate(){
   }
   $('entryErr').style.display = entryOk ? 'none':'block';
 
-  var mediaOk = mediaFiles.length > 0;
-  $('mediaErr').style.display = mediaOk ? 'none':'block';
-
   var recipOk = waNumbers.length > 0;
   $('recipErr').style.display = recipOk ? 'none':'block';
 
-  var allOk = ok && compOk && entryOk && mediaOk && recipOk;
+  var allOk = ok && compOk && entryOk && recipOk;
   if(!allOk){
     toast('Please complete all mandatory sections');
     var firstErr = document.querySelector('.err') || document.querySelector('.err-msg[style*="block"]');
@@ -538,8 +549,9 @@ function buildReport(){
     }
   }
   t += '\n----------------------------\n';
+  var allMedia = gatherAllMedia();
   var p=0,v=0;
-  mediaFiles.forEach(function(m){ if(m.kind==='photo')p++; else v++; });
+  allMedia.forEach(function(m){ if(m.kind==='photo')p++; else v++; });
   t += '*Coverage:* ' + oc + ' outlet(s), ' + sc + ' market summarie(s)\n';
   t += '*Attachments:* ' + p + ' photo(s), ' + v + ' video(s)';
   return t;
@@ -552,17 +564,28 @@ function generatePDF(){
   
   toast('Generating PDF...');
   
-  var imagePromises = mediaFiles.map(function(m){
-    return new Promise(function(resolve){
-      var reader = new FileReader();
-      reader.onload = function(e){
-        resolve({data: e.target.result, type: m.kind});
-      };
-      reader.readAsDataURL(m.file);
-    });
+  // Read every outlet's media into base64, tagged with which entry it belongs to
+  var entries = Array.prototype.slice.call(document.querySelectorAll('.entry'));
+  var readPromises = [];
+  entries.forEach(function(e, entryIdx){
+    if(e._media){
+      e._media.forEach(function(m){
+        readPromises.push(new Promise(function(resolve){
+          var reader = new FileReader();
+          reader.onload = function(ev){ resolve({entryIdx:entryIdx, data:ev.target.result, type:m.kind}); };
+          reader.readAsDataURL(m.file);
+        }));
+      });
+    }
   });
   
-  Promise.all(imagePromises).then(function(images){
+  Promise.all(readPromises).then(function(imgs){
+    // group images by entry index
+    var byEntry = {};
+    imgs.forEach(function(im){
+      if(!byEntry[im.entryIdx]) byEntry[im.entryIdx] = [];
+      byEntry[im.entryIdx].push(im);
+    });
     if(typeof pdfMake === 'undefined'){
       toast('Loading PDF library...');
       var script = document.createElement('script');
@@ -571,20 +594,20 @@ function generatePDF(){
         var vfs = document.createElement('script');
         vfs.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/vfs_fonts.js';
         vfs.onload = function(){
-          setTimeout(function(){ makePDFAndShare(images, g, fmtD); }, 800);
+          setTimeout(function(){ makePDFAndShare(byEntry, g, fmtD); }, 800);
         };
         document.head.appendChild(vfs);
       };
       document.head.appendChild(script);
       return;
     }
-    makePDFAndShare(images, g, fmtD);
+    makePDFAndShare(byEntry, g, fmtD);
   }).catch(function(err){
     toast('Error preparing PDF; check file sizes');
   });
 }
 
-function makePDFAndShare(images, g, fmtD){
+function makePDFAndShare(byEntry, g, fmtD){
   var docDef = {
     content: [],
     styles: {
@@ -636,14 +659,16 @@ function makePDFAndShare(images, g, fmtD){
       docDef.content.push({text: 'Way Forward: ' + b.querySelector('.obs-action').value.trim(), style: 'normal'});
       docDef.content.push({text: 'Owner: ' + b.querySelector('.obs-owner').value.trim() + ' | Timeline: ' + fmtD(b.querySelector('.obs-date').value), style: 'hint', margin: [0, 2, 0, 8]});
     }
-    docDef.content.push({text: '', margin: [0, 0, 0, 4]});
-  }
-  
-  if(images.length){
-    docDef.content.push({text: 'CAPTURES', style: 'header'});
-    images.forEach(function(img){
-      docDef.content.push({image: img.data, width: 450, margin: [0, 0, 0, 12]});
-    });
+    
+    // per-outlet captures, right under this outlet
+    var outletImgs = byEntry[i] || [];
+    if(outletImgs.length){
+      docDef.content.push({text: 'Captures:', style: 'label'});
+      outletImgs.forEach(function(img){
+        docDef.content.push({image: img.data, width: 300, margin: [0, 2, 0, 8]});
+      });
+    }
+    docDef.content.push({text: '', margin: [0, 0, 0, 6]});
   }
   
   var pdfDocGenerator = pdfMake.createPdf(docDef);
@@ -700,9 +725,10 @@ function openSendFlow(){
     });
   }
 
-  var files = mediaFiles.map(function(m){ return m.file; });
-  var photoF = mediaFiles.filter(function(m){return m.kind==='photo';}).map(function(m){return m.file;});
-  var videoF = mediaFiles.filter(function(m){return m.kind==='video';}).map(function(m){return m.file;});
+  var allMedia = gatherAllMedia();
+  var files = allMedia.map(function(m){ return m.file; });
+  var photoF = allMedia.filter(function(m){return m.kind==='photo';}).map(function(m){return m.file;});
+  var videoF = allMedia.filter(function(m){return m.kind==='video';}).map(function(m){return m.file;});
   function shareBatch(batch, caption){
     var payload = {files:batch, text:caption};
     if(!(navigator.canShare && navigator.canShare(payload))) payload = {files:batch};
